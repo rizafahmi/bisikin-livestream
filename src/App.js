@@ -1,10 +1,14 @@
-import logo from './logo.svg';
+import Header from './components/Header.js';
+import Footer from './components/Footer.js';
+import Main from './components/Main.js';
 
 function App() {
   return (
-    <div className="bg-red-500 py-4">
-      <h1 className="font-lg font-bold">Halo Tailwind</h1>
-    </div>
+    <>
+      <Header />
+      <Main />
+      <Footer />
+    </>
   );
 }
 
