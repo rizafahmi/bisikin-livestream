@@ -1,7 +1,7 @@
 import qoreContext from "../qoreContext.js";
 
 function List() {
-  const { data } = qoreContext.view("allFeedback").useListRow();
+  const { data, revalidate } = qoreContext.view("allFeedback").useListRow();
   return (
     <div className="list" style={{ flex: 7 }}>
       <ul className="divide-y divide-gray-200">
