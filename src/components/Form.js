@@ -1,10 +1,11 @@
 import { useState } from "react";
-import qoreContext from "../qoreContext.js";
+import qoreContext, { client } from "../qoreContext.js";
 import { getListRow } from "../lib/helpers.js";
 
 function Form() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
   const { insertRow, status } = qoreContext.view("allFeedback").useInsertRow();
 
   const { revalidate } = getListRow("allFeedback");
@@ -12,10 +13,17 @@ function Form() {
 
   async function handleSubmitForm(e) {
     e.preventDefault();
-    const result = await insertRow({ title, description });
+    const result = await insertRow({ title, description, image });
     setTitle("");
     setDescription("");
+    setImage("");
     revalidate();
+  }
+  async function handleFileChange(e) {
+    const file = e.currentTarget.files?.item(0);
+    if (!file) return;
+    const url = await client.view("allFeedback").upload(file);
+    await setImage(url);
   }
 
   return (
@@ -45,6 +53,9 @@ function Form() {
                 className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full text-xs border-gray-300 rounded-sm p-1"
                 value={description}
               ></textarea>
+            </div>
+            <div class="my-4">
+              <input type="file" onChange={handleFileChange} />
             </div>
             <div>
               <button className="bg-black text-white px-2 py-1 rounded-sm uppercase text-xs font-medium block w-full shadow-sm">

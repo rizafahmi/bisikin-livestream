@@ -9,28 +9,40 @@ declare module "@feedloop/qore-client" {
     email: string;
     role: { id: string; displayField: string };
     feedback: { nodes: FeedbackTableRow[] };
-    name: string;
-    comment1: { nodes: Comment1TableRow[] };
   };
 
   type FeedbackTableRow = {
     id: string;
-    title: string;
     description: string;
+    title: string;
     vote: number;
-    slug: string;
-    status: "ON PROGRESS" | "ICEBOX" | "DONE" | "TODO";
     createdBy: CreatedByTableRow;
-    comment: { nodes: CommentTableRow[] };
+    slug: string;
     createdAt: Date;
+    status: "ON PROGRESS" | "DONE" | "ICEBOX" | "TODO";
+    comment: { nodes: CommentTableRow[] };
+    comments: string;
+    numberofcomments: number;
   };
 
   type CommentTableRow = {
     id: string;
     body: string;
-    createdAt: Date;
     feedback: FeedbackTableRow;
-    createdBy: CreatedByTableRow;
+    createdAt: Date;
+  };
+
+  type AllMemberViewRow = {
+    read: {
+      id: string;
+      email: string;
+      role: { id: string; displayField: string };
+    };
+    write: {
+      email: string;
+    };
+    params: {};
+    actions: {};
   };
 
   type AllFeedbackViewRow = {
@@ -39,60 +51,64 @@ declare module "@feedloop/qore-client" {
       title: string;
       description: string;
       vote: number;
-      slug: string;
-      status: "ON PROGRESS" | "ICEBOX" | "DONE" | "TODO";
       createdBy: CreatedByTableRow;
+      slug: string;
       createdAt: Date;
+      status: "ON PROGRESS" | "DONE" | "ICEBOX" | "TODO";
+      comments: string;
+      numberofcomments: number;
     };
     write: {
       title: string;
       description: string;
       vote: number;
-      slug: string;
-      status: "ON PROGRESS" | "ICEBOX" | "DONE" | "TODO";
       createdBy: string[];
+      slug: string;
       createdAt: Date;
+      status: "ON PROGRESS" | "DONE" | "ICEBOX" | "TODO";
     };
     params: {};
-    actions: {};
-  };
-
-  type AllMemberViewRow = {
-    read: {
-      id: string;
-      email: string;
-      role: { id: string; displayField: string };
-      name: string;
-    };
-    write: {
-      email: string;
-      name: string;
-    };
-    params: {};
-    actions: {};
+    actions: { setdone: {} };
   };
 
   type AllCommentViewRow = {
     read: {
       id: string;
       body: string;
-      createdAt: Date;
       feedback: FeedbackTableRow;
-      createdBy: CreatedByTableRow;
+      createdAt: Date;
     };
     write: {
       body: string;
-      createdAt: Date;
       feedback: string[];
-      createdBy: string[];
+      createdAt: Date;
     };
     params: {};
     actions: {};
   };
 
+  type CommentsByFeedbackViewRow = {
+    read: {
+      id: string;
+      body: string;
+      feedback: FeedbackTableRow;
+      createdAt: Date;
+    };
+    write: {
+      body: string;
+      feedback: string[];
+      createdAt: Date;
+    };
+    params: {
+      feedbackId: string;
+    };
+    actions: {};
+  };
+
   type ProjectSchema = {
-    allFeedback: AllFeedbackViewRow;
     allMember: AllMemberViewRow;
+    allFeedback: AllFeedbackViewRow;
     allComment: AllCommentViewRow;
+    commentsByFeedback: CommentsByFeedbackViewRow;
   };
 }

@@ -7,3 +7,4 @@ const client = new QoreClient(config);
 client.init(schema);
 const qoreContext = createQoreContext(client);
 export default qoreContext;
+export { client };

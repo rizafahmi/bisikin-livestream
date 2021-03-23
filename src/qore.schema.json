@@ -31,25 +31,7 @@
           "table": "feedback",
           "column": "createdBy",
           "multiple": true,
-          "displayField": false
-        },
-        {
-          "name": "name",
-          "type": "text",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "name",
-          "displayField": false
-        },
-        {
-          "name": "Comment 1",
-          "type": "relation",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "comment1",
-          "table": "comment",
-          "column": "createdBy",
-          "multiple": true,
+          "relatedTableFields": [],
           "displayField": false
         }
       ]
@@ -60,14 +42,6 @@
       "id": "feedback",
       "fields": [
         {
-          "name": "title",
-          "type": "text",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "title",
-          "displayField": true
-        },
-        {
           "name": "description",
           "type": "text",
           "deletionProtection": false,
@@ -76,28 +50,19 @@
           "displayField": false
         },
         {
-          "name": "vote",
-          "type": "number",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "vote",
-          "displayField": false
-        },
-        {
-          "name": "slug",
+          "name": "title",
           "type": "text",
           "deletionProtection": false,
           "defaultValue": null,
-          "id": "slug",
-          "displayField": false
+          "id": "title",
+          "displayField": true
         },
         {
-          "name": "status",
-          "type": "select",
+          "name": "vote",
+          "type": "number",
           "deletionProtection": false,
-          "defaultValue": "TODO",
-          "id": "status",
-          "select": ["ON PROGRESS", "ICEBOX", "DONE", "TODO"],
+          "defaultValue": "0",
+          "id": "vote",
           "displayField": false
         },
         {
@@ -109,6 +74,32 @@
           "table": "member",
           "column": "feedback",
           "multiple": false,
+          "relatedTableFields": ["email"],
+          "displayField": false
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "slug",
+          "displayField": false
+        },
+        {
+          "name": "created_at",
+          "type": "date",
+          "deletionProtection": false,
+          "defaultValue": "NOW()",
+          "id": "createdAt",
+          "displayField": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "deletionProtection": false,
+          "defaultValue": "TODO",
+          "id": "status",
+          "select": ["ON PROGRESS", "DONE", "ICEBOX", "TODO"],
           "displayField": false
         },
         {
@@ -120,14 +111,42 @@
           "table": "comment",
           "column": "feedback",
           "multiple": true,
+          "relatedTableFields": [],
           "displayField": false
         },
         {
-          "name": "created_at",
-          "type": "date",
+          "name": "comments",
+          "type": "lookup",
           "deletionProtection": false,
-          "defaultValue": "NOW()",
-          "id": "createdAt",
+          "defaultValue": null,
+          "id": "comments",
+          "source": "comment",
+          "destinations": ["body"],
+          "returnType": "text",
+          "multiple": true,
+          "displayField": false
+        },
+        {
+          "name": "numberofcomments",
+          "type": "rollup",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "numberofcomments",
+          "source": "comment",
+          "destinations": ["id"],
+          "aggregate": "count",
+          "condition": null,
+          "displayField": false
+        },
+        {
+          "name": "setdone",
+          "type": "action",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "setdone",
+          "parameters": [],
+          "tasks": [{ "type": "update", "update": { "status": "'DONE'" } }],
+          "condition": null,
           "displayField": false
         }
       ]
@@ -143,14 +162,6 @@
           "deletionProtection": false,
           "defaultValue": null,
           "id": "body",
-          "displayField": true
-        },
-        {
-          "name": "created_at",
-          "type": "date",
-          "deletionProtection": false,
-          "defaultValue": "NOW()",
-          "id": "createdAt",
           "displayField": false
         },
         {
@@ -162,17 +173,15 @@
           "table": "feedback",
           "column": "comment",
           "multiple": false,
+          "relatedTableFields": ["title"],
           "displayField": false
         },
         {
-          "name": "created_by",
-          "type": "relation",
+          "name": "created_at",
+          "type": "date",
           "deletionProtection": false,
-          "defaultValue": null,
-          "id": "createdBy",
-          "table": "member",
-          "column": "comment1",
-          "multiple": false,
+          "defaultValue": "NOW()",
+          "id": "createdAt",
           "displayField": false
         }
       ]
@@ -191,109 +200,57 @@
       "isAdmin": false,
       "isEditor": false,
       "isPublic": true,
-      "permissions": []
+      "permissions": [
+        {
+          "insert": false,
+          "select": false,
+          "update": false,
+          "delete": false,
+          "viewId": "allMember"
+        },
+        {
+          "insert": true,
+          "select": true,
+          "update": true,
+          "delete": true,
+          "viewId": "allFeedback"
+        },
+        {
+          "insert": true,
+          "select": true,
+          "update": true,
+          "delete": true,
+          "viewId": "allComment"
+        },
+        {
+          "insert": false,
+          "select": true,
+          "update": false,
+          "delete": false,
+          "viewId": "commentsByFeedback"
+        }
+      ]
     }
   ],
   "forms": [
     {
-      "name": "Commentar Form",
-      "id": "commentarForm",
-      "tableId": "comment",
-      "fields": [{ "id": "body" }, { "id": "createdAt" }, { "id": "feedback" }]
+      "name": "Form member",
+      "id": "formMember",
+      "tableId": "member",
+      "fields": [{ "id": "email" }, { "id": "role" }]
     },
     {
-      "name": "Input Form Feedback",
-      "id": "inputFormFeedback",
+      "name": "Feedback Form",
+      "id": "feedbackForm",
       "tableId": "feedback",
       "fields": [
-        { "id": "title" },
-        { "id": "description" },
-        { "id": "vote" },
-        { "id": "slug" },
-        { "id": "status" },
-        { "required": true, "id": "createdBy" },
-        { "required": true, "id": "comment" }
+        { "required": true, "id": "title" },
+        { "required": true, "id": "description" },
+        { "required": true, "id": "createdBy" }
       ]
     }
   ],
   "views": [
-    {
-      "id": "allFeedback",
-      "name": "All Feedback",
-      "tableId": "feedback",
-      "parameters": [],
-      "sorts": [],
-      "fields": [
-        {
-          "name": "title",
-          "type": "text",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "title",
-          "displayField": true,
-          "design": null
-        },
-        {
-          "name": "description",
-          "type": "text",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "description",
-          "displayField": false,
-          "design": null
-        },
-        {
-          "name": "vote",
-          "type": "number",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "vote",
-          "displayField": false,
-          "design": null
-        },
-        {
-          "name": "slug",
-          "type": "text",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "slug",
-          "displayField": false,
-          "design": null
-        },
-        {
-          "name": "status",
-          "type": "select",
-          "deletionProtection": false,
-          "defaultValue": "TODO",
-          "id": "status",
-          "select": ["ON PROGRESS", "ICEBOX", "DONE", "TODO"],
-          "displayField": false,
-          "design": null
-        },
-        {
-          "name": "created_by",
-          "type": "relation",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "createdBy",
-          "table": "member",
-          "column": "feedback",
-          "multiple": false,
-          "displayField": false,
-          "design": null
-        },
-        {
-          "name": "created_at",
-          "type": "date",
-          "deletionProtection": false,
-          "defaultValue": "NOW()",
-          "id": "createdAt",
-          "displayField": false,
-          "design": null
-        }
-      ],
-      "design": null
-    },
     {
       "id": "allMember",
       "name": "All member",
@@ -318,13 +275,120 @@
           "id": "role",
           "displayField": false,
           "design": null
-        },
+        }
+      ],
+      "design": null
+    },
+    {
+      "id": "allFeedback",
+      "name": "All Feedback",
+      "tableId": "feedback",
+      "parameters": [],
+      "sorts": [],
+      "fields": [
         {
-          "name": "name",
+          "name": "title",
           "type": "text",
           "deletionProtection": false,
           "defaultValue": null,
-          "id": "name",
+          "id": "title",
+          "displayField": true,
+          "design": { "width": 318 }
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "description",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "vote",
+          "type": "number",
+          "deletionProtection": false,
+          "defaultValue": "0",
+          "id": "vote",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "created_by",
+          "type": "relation",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "createdBy",
+          "table": "member",
+          "column": "feedback",
+          "multiple": false,
+          "relatedTableFields": ["email"],
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "slug",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "created_at",
+          "type": "date",
+          "deletionProtection": false,
+          "defaultValue": "NOW()",
+          "id": "createdAt",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "deletionProtection": false,
+          "defaultValue": "TODO",
+          "id": "status",
+          "select": ["ON PROGRESS", "DONE", "ICEBOX", "TODO"],
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "comments",
+          "type": "lookup",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "comments",
+          "source": "comment",
+          "destinations": ["body"],
+          "returnType": "text",
+          "multiple": true,
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "numberofcomments",
+          "type": "rollup",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "numberofcomments",
+          "source": "comment",
+          "destinations": ["id"],
+          "aggregate": "count",
+          "condition": null,
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "setdone",
+          "type": "action",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "setdone",
+          "parameters": [],
+          "tasks": [{ "type": "update", "update": { "status": "'DONE'" } }],
+          "condition": null,
           "displayField": false,
           "design": null
         }
@@ -344,15 +408,6 @@
           "deletionProtection": false,
           "defaultValue": null,
           "id": "body",
-          "displayField": true,
-          "design": null
-        },
-        {
-          "name": "created_at",
-          "type": "date",
-          "deletionProtection": false,
-          "defaultValue": "NOW()",
-          "id": "createdAt",
           "displayField": false,
           "design": null
         },
@@ -365,23 +420,65 @@
           "table": "feedback",
           "column": "comment",
           "multiple": false,
+          "relatedTableFields": ["title"],
           "displayField": false,
           "design": null
         },
         {
-          "name": "created_by",
-          "type": "relation",
+          "name": "created_at",
+          "type": "date",
           "deletionProtection": false,
-          "defaultValue": null,
-          "id": "createdBy",
-          "table": "member",
-          "column": "comment1",
-          "multiple": false,
+          "defaultValue": "NOW()",
+          "id": "createdAt",
           "displayField": false,
           "design": null
         }
       ],
       "design": null
+    },
+    {
+      "id": "commentsByFeedback",
+      "name": "Comments by feedback",
+      "tableId": "comment",
+      "parameters": [
+        { "slug": "feedbackId", "type": "text", "required": true }
+      ],
+      "sorts": [],
+      "fields": [
+        {
+          "name": "body",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "body",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "feedback",
+          "type": "relation",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "feedback",
+          "table": "feedback",
+          "column": "comment",
+          "multiple": false,
+          "relatedTableFields": ["title"],
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "created_at",
+          "type": "date",
+          "deletionProtection": false,
+          "defaultValue": "NOW()",
+          "id": "createdAt",
+          "displayField": false,
+          "design": null
+        }
+      ],
+      "design": null,
+      "filter": "feedback.id = $param.feedbackId"
     }
   ]
 }
