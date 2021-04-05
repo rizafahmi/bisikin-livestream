@@ -2,7 +2,7 @@ import { useState } from "react";
 import qoreContext, { client } from "../qoreContext.js";
 import { getListRow } from "../lib/helpers.js";
 
-function Form() {
+function Form({ user }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
@@ -54,11 +54,17 @@ function Form() {
                 value={description}
               ></textarea>
             </div>
-            <div class="my-4">
+            <div className="my-4">
               <input type="file" onChange={handleFileChange} />
             </div>
             <div>
-              <button className="bg-black text-white px-2 py-1 rounded-sm uppercase text-xs font-medium block w-full shadow-sm">
+              <button
+                title="Silakan login untuk mengirimkan feedback."
+                className={`${
+                  !user ? "bg-gray-300" : "bg-black"
+                } text-white px-2 py-1 rounded-sm uppercase text-xs font-medium block w-full shadow-sm`}
+                disabled={!user && true}
+              >
                 Save
               </button>
             </div>

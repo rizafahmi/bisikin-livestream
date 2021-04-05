@@ -33,6 +33,21 @@
           "multiple": true,
           "relatedTableFields": [],
           "displayField": false
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "name",
+          "displayField": false
+        },
+        {
+          "name": "password",
+          "type": "password",
+          "deletionProtection": false,
+          "id": "password",
+          "displayField": false
         }
       ]
     },
@@ -202,8 +217,8 @@
       "isPublic": true,
       "permissions": [
         {
-          "insert": false,
-          "select": false,
+          "insert": true,
+          "select": true,
           "update": false,
           "delete": false,
           "viewId": "allMember"
@@ -226,6 +241,42 @@
           "insert": false,
           "select": true,
           "update": false,
+          "delete": false,
+          "viewId": "commentsByFeedback"
+        }
+      ]
+    },
+    {
+      "name": "member",
+      "isAdmin": false,
+      "isEditor": false,
+      "isPublic": false,
+      "permissions": [
+        {
+          "insert": false,
+          "select": false,
+          "update": false,
+          "delete": false,
+          "viewId": "allMember"
+        },
+        {
+          "insert": false,
+          "select": true,
+          "update": true,
+          "delete": false,
+          "viewId": "allFeedback"
+        },
+        {
+          "insert": false,
+          "select": true,
+          "update": true,
+          "delete": false,
+          "viewId": "allComment"
+        },
+        {
+          "insert": false,
+          "select": true,
+          "update": true,
           "delete": false,
           "viewId": "commentsByFeedback"
         }
@@ -273,6 +324,23 @@
           "deletionProtection": true,
           "defaultValue": null,
           "id": "role",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "name",
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "password",
+          "type": "password",
+          "deletionProtection": false,
+          "id": "password",
           "displayField": false,
           "design": null
         }

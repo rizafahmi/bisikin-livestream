@@ -1,33 +1,21 @@
 import { useState } from "react";
-import qoreContext from "../qoreContext.js";
+import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
+import qoreContext, { client } from "../qoreContext.js";
 
-function Register() {
-  const [name, setName] = useState("");
+function Login({ handleLogin }) {
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const { insertRow } = qoreContext.view("allMember").useInsertRow();
-  Cookies.remove("token");
-
-  async function handleRegistration(e) {
-    e.preventDefault();
-    if (password === confirmPassword) {
-      await insertRow({ name, email, password, role: "41dxQ5jLhAuaQnZ" });
-      // setName("");
-      // setEmail("");
-      // setName("");
-      // setPassword("");
-      // setConfirmPassword("");
-    }
-  }
+  const client = qoreContext.useClient();
+  const { user } = qoreContext.useCurrentUser();
 
   return (
     <>
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Registrasi Akun Baru
+            Login Akun
           </h2>
         </div>
 
@@ -37,28 +25,12 @@ function Register() {
               className="space-y-6"
               action="#"
               method="POST"
-              onSubmit={handleRegistration}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleLogin(email, password);
+                history.push("/");
+              }}
             >
-              <div>
-                <label
-                  htmlFor="fullname"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Nama
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="fullname"
-                    name="fullname"
-                    type="text"
-                    onChange={(e) => setName(e.target.value)}
-                    value={name}
-                    autoComplete="fullname"
-                    required
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
               <div>
                 <label
                   htmlFor="email"
@@ -101,26 +73,6 @@ function Register() {
               </div>
 
               <div>
-                <label
-                  htmlFor="confirmpassword"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Konfirmasi Password
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="confirmpassword"
-                    name="confirmpassword"
-                    type="password"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    value={confirmPassword}
-                    required
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
                 <button
                   type="submit"
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -136,4 +88,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;

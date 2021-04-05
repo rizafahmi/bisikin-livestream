@@ -9,6 +9,8 @@ declare module "@feedloop/qore-client" {
     email: string;
     role: { id: string; displayField: string };
     feedback: { nodes: FeedbackTableRow[] };
+    name: string;
+    password: string;
   };
 
   type FeedbackTableRow = {
@@ -37,9 +39,13 @@ declare module "@feedloop/qore-client" {
       id: string;
       email: string;
       role: { id: string; displayField: string };
+      name: string;
+      password: string;
     };
     write: {
       email: string;
+      name: string;
+      password: string;
     };
     params: {};
     actions: {};
