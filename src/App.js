@@ -1,14 +1,19 @@
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "./components/Header.js";
 import Footer from "./components/Footer.js";
-import Main from "./components/Main.js";
+import Main from "./pages/Main.js";
+import Register from "./pages/Register.js";
 
 function App() {
   return (
-    <>
+    <Router>
       <Header />
-      <Main />
+      <Switch>
+        <Route path="/register" component={Register} />
+        <Route path="/" component={Main} />
+      </Switch>
       <Footer />
-    </>
+    </Router>
   );
 }
 
