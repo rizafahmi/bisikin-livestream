@@ -52,6 +52,41 @@
       ]
     },
     {
+      "name": "Comment",
+      "type": null,
+      "id": "comment",
+      "fields": [
+        {
+          "name": "body",
+          "type": "text",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "body",
+          "displayField": false
+        },
+        {
+          "name": "feedback",
+          "type": "relation",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "id": "feedback",
+          "table": "feedback",
+          "column": "comment",
+          "multiple": false,
+          "relatedTableFields": ["title"],
+          "displayField": false
+        },
+        {
+          "name": "created_at",
+          "type": "date",
+          "deletionProtection": false,
+          "defaultValue": "NOW()",
+          "id": "createdAt",
+          "displayField": false
+        }
+      ]
+    },
+    {
       "name": "Feedback",
       "type": null,
       "id": "feedback",
@@ -163,40 +198,14 @@
           "tasks": [{ "type": "update", "update": { "status": "'DONE'" } }],
           "condition": null,
           "displayField": false
-        }
-      ]
-    },
-    {
-      "name": "Comment",
-      "type": null,
-      "id": "comment",
-      "fields": [
-        {
-          "name": "body",
-          "type": "text",
-          "deletionProtection": false,
-          "defaultValue": null,
-          "id": "body",
-          "displayField": false
         },
         {
-          "name": "feedback",
-          "type": "relation",
+          "name": "file",
+          "type": "file",
           "deletionProtection": false,
           "defaultValue": null,
-          "id": "feedback",
-          "table": "feedback",
-          "column": "comment",
-          "multiple": false,
-          "relatedTableFields": ["title"],
-          "displayField": false
-        },
-        {
-          "name": "created_at",
-          "type": "date",
-          "deletionProtection": false,
-          "defaultValue": "NOW()",
-          "id": "createdAt",
+          "fileType": "image",
+          "id": "file",
           "displayField": false
         }
       ]
@@ -260,24 +269,24 @@
           "viewId": "allMember"
         },
         {
-          "insert": false,
+          "insert": true,
           "select": true,
           "update": true,
-          "delete": false,
+          "delete": true,
           "viewId": "allFeedback"
         },
         {
-          "insert": false,
+          "insert": true,
           "select": true,
           "update": true,
-          "delete": false,
+          "delete": true,
           "viewId": "allComment"
         },
         {
-          "insert": false,
+          "insert": true,
           "select": true,
           "update": true,
-          "delete": false,
+          "delete": true,
           "viewId": "commentsByFeedback"
         }
       ]
@@ -457,6 +466,16 @@
           "parameters": [],
           "tasks": [{ "type": "update", "update": { "status": "'DONE'" } }],
           "condition": null,
+          "displayField": false,
+          "design": null
+        },
+        {
+          "name": "file",
+          "type": "file",
+          "deletionProtection": false,
+          "defaultValue": null,
+          "fileType": "image",
+          "id": "file",
           "displayField": false,
           "design": null
         }

@@ -1,11 +1,13 @@
 import { useState } from "react";
-import qoreContext, { client } from "../qoreContext.js";
+import qoreContext from "../qoreContext.js";
 import { getListRow } from "../lib/helpers.js";
 
 function Form({ user }) {
+  const client = qoreContext.useClient();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+  const [file, setFile] = useState("");
+  const [ready, setReady] = useState(true);
   const { insertRow, status } = qoreContext.view("allFeedback").useInsertRow();
 
   const { revalidate } = getListRow("allFeedback");
@@ -13,17 +15,26 @@ function Form({ user }) {
 
   async function handleSubmitForm(e) {
     e.preventDefault();
-    const result = await insertRow({ title, description, image });
-    setTitle("");
-    setDescription("");
-    setImage("");
-    revalidate();
+    try {
+      const feedback = { title, description, file };
+      console.log(feedback);
+      const result = await insertRow(feedback);
+      setTitle("");
+      setDescription("");
+      setFile("");
+      revalidate();
+    } catch (error) {
+      console.error(error);
+    }
   }
   async function handleFileChange(e) {
     const file = e.currentTarget.files?.item(0);
     if (!file) return;
+    await setReady(false);
     const url = await client.view("allFeedback").upload(file);
-    await setImage(url);
+    console.log(url);
+    await setFile(url);
+    await setReady(true);
   }
 
   return (
@@ -61,9 +72,9 @@ function Form({ user }) {
               <button
                 title="Silakan login untuk mengirimkan feedback."
                 className={`${
-                  !user ? "bg-gray-300" : "bg-black"
+                  !user || !ready ? "bg-gray-300" : "bg-black"
                 } text-white px-2 py-1 rounded-sm uppercase text-xs font-medium block w-full shadow-sm`}
-                disabled={!user && true}
+                disabled={(!user || !ready) && true}
               >
                 Save
               </button>

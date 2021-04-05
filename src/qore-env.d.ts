@@ -13,6 +13,13 @@ declare module "@feedloop/qore-client" {
     password: string;
   };
 
+  type CommentTableRow = {
+    id: string;
+    body: string;
+    feedback: FeedbackTableRow;
+    createdAt: Date;
+  };
+
   type FeedbackTableRow = {
     id: string;
     description: string;
@@ -25,13 +32,7 @@ declare module "@feedloop/qore-client" {
     comment: { nodes: CommentTableRow[] };
     comments: string;
     numberofcomments: number;
-  };
-
-  type CommentTableRow = {
-    id: string;
-    body: string;
-    feedback: FeedbackTableRow;
-    createdAt: Date;
+    file: string;
   };
 
   type AllMemberViewRow = {
@@ -49,6 +50,12 @@ declare module "@feedloop/qore-client" {
     };
     params: {};
     actions: {};
+    forms: {
+      formMember: {
+        email?: string;
+        role?: string;
+      };
+    };
   };
 
   type AllFeedbackViewRow = {
@@ -63,6 +70,7 @@ declare module "@feedloop/qore-client" {
       status: "ON PROGRESS" | "DONE" | "ICEBOX" | "TODO";
       comments: string;
       numberofcomments: number;
+      file: string;
     };
     write: {
       title: string;
@@ -72,9 +80,17 @@ declare module "@feedloop/qore-client" {
       slug: string;
       createdAt: Date;
       status: "ON PROGRESS" | "DONE" | "ICEBOX" | "TODO";
+      file: string;
     };
     params: {};
     actions: { setdone: {} };
+    forms: {
+      feedbackForm: {
+        title: string;
+        description: string;
+        createdBy: string[];
+      };
+    };
   };
 
   type AllCommentViewRow = {
@@ -91,6 +107,7 @@ declare module "@feedloop/qore-client" {
     };
     params: {};
     actions: {};
+    forms: {};
   };
 
   type CommentsByFeedbackViewRow = {
@@ -109,6 +126,7 @@ declare module "@feedloop/qore-client" {
       feedbackId: string;
     };
     actions: {};
+    forms: {};
   };
 
   type ProjectSchema = {
